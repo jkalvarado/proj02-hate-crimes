@@ -2,8 +2,6 @@
 
 **Team members:** <Emily Lupercio and Johanna Alvarado>
 
-See the [Project 02 instructions](https://data385.github.io/project/proj02_wholegame.html) for what goes in each section. Bullet points are great. Put any images in an `img/` folder.
-
 ## 1. Problem statement
 
 The FBI describes a hate crime to be a crime against a person, multiple people, or an organization based on their race, religion, sexual orientation, gender identity or due to a disability. It turns out, just about anyone in America is at risk of becoming a hate crime victim. 
@@ -69,8 +67,9 @@ election (2000, 2004, ... 2024) as "yes" and everything else as "no".
 Multiple linear regression: we'll count incidents per month for each bias type and use the monthly count as our response. Our predictors are `election_period`, bias type (`most_serious_bias_type`), and year. We'll add an interaction between `election_period` and bias type to see if some 
 groups go up more than others during elections, which tells us if the most targeted group changes. We include year so we don't confuse a long-term trend with an election effect.
 
-Logistic regression: to check the groups that come up most in our EDA one at a time. Our response is whether an incident targeted that group or not (yes/no from `most_serious_bias`), and our predictor is `election_period`. We picked logistic regression because the response only has two 
-outcomes, and it'll show if an incident is more likely to target that group during an election period.
+Simple linear regression: we'll count incidents per month for each bias type and use the monthly count as our response. Our predictor is `election_period`. Since it's categorical, the slope tells us how many more (or fewer) incidents per month a group gets during election periods compared to other months. We'll fit a separate model for each of the most targeted groups from our EDA and compare their slopes. If a different group has the biggest jump during election periods, that means the most targeted group changes around elections. We'll use `linear_reg()`, `fit()`, and `tidy()` for the models and `augment()` to check the residuals.
+
+Bootstrapping: we'll bootstrap a 95% confidence interval for each slope. If the interval doesn't include 0, that tells us the election period really does make a difference for that group and it's not just random.
 
 The FBI 2025 tables will be used for EDA and to compare San Francisco to the rest of California and the U.S.
 
