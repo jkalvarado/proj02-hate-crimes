@@ -1,6 +1,6 @@
 # Project 02 Proposal: <your project title>
 
-**Team members:** <Emily Lupercio and Johanna Alvarado>
+**Team members:** Emily Lupercio and Johanna Alvarado
 
 ## 1. Problem statement
 
