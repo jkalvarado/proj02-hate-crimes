@@ -44,17 +44,35 @@ Does the most frequently targeted group change at the time of presidential elect
 
 ## 4. Data example  
 
-Link to data: [rendered PDF](data_management.pdf)
+Link to data: https://github.com/jkalvarado/proj02/blob/main/data_management.pdf
 
 ## 5. EDA
 
-_The techniques and functions you plan to use to import, wrangle, visualize, and explore the data, and why each is needed._
+We are using alternatives to scraping, which is downloading the csv of hate crime incidents and the FBI's 2025 Hate Crime Statistics 
+(15 Excel tables).
 
+Import: `read_csv()` for the incident CSV and `read_excel()` for the FBI tables, since they come as .xlsx files.
+
+Wrangle: The FBI tables are made to look nice, not to be used in R (titles, footnotes, stacked headers), so we'll use `clean_names()` to fix column names, `filter()` to drop the extra rows, and `pivot_longer()` to make the tables tidy so they're easy to graph. We'll use `mutate()` with 
+`as.Date()` to turn the incident months into real dates so we can look at trends.
+
+Explore: `glimpse()`, `summary()`, and `count()` to check data types, missing values, and categories. `group_by()` + `summarize()` to break things down by bias type, crime type, and location. `left_join()` to match each state's numbers with its population so bigger states don't look
+worse just because they have more people.
+
+Visualize: ggplot2: bar charts (`geom_col()`) to compare groups and line graphs (`geom_line()`) to show changes over time.
 
 ## 6. Modeling
 
-_The models you plan to use, your response and predictor variables, and why the models fit your research question._
+We're using the San Francisco PDIHC data for modeling since each row is one hate crime with a date and bias, which is what we need to answer our RQ. We'll make an election period variable (`election_period`) that marks incidents from 3 months before to 3 months after each presidential 
+election (2000, 2004, ... 2024) as "yes" and everything else as "no".
 
+Multiple linear regression: we'll count incidents per month for each bias type and use the monthly count as our response. Our predictors are `election_period`, bias type (`most_serious_bias_type`), and year. We'll add an interaction between `election_period` and bias type to see if some 
+groups go up more than others during elections, which tells us if the most targeted group changes. We include year so we don't confuse a long-term trend with an election effect.
+
+Logistic regression: to check the groups that come up most in our EDA one at a time. Our response is whether an incident targeted that group or not (yes/no from `most_serious_bias`), and our predictor is `election_period`. We picked logistic regression because the response only has two 
+outcomes, and it'll show if an incident is more likely to target that group during an election period.
+
+The FBI 2025 tables will be used for EDA and to compare San Francisco to the rest of California and the U.S.
 
 ## 7. Communicate
 
@@ -62,5 +80,5 @@ Results will be displayed on poster.
 
 ## 8. LLM disclaimer
 
-We expect to use ChatGPT for debugging original code, with the purpose of returning optimal model visualizations and results. Raw data will not be shared with any LLMs.
+We expect to use ChatGPT and Claude for debugging original code, with the purpose of returning optimal model visualizations and results. Raw data will not be shared with any LLMs, along with any identifiable data 
 
