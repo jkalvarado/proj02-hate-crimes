@@ -1,55 +1,82 @@
 # Project 02 Proposal: <your project title>
 
-**Team members:** <name(s)>
-
-See the [Project 02 instructions](https://data385.github.io/project/proj02_wholegame.html) for what goes in each section. Bullet points are great. Put any images in an `img/` folder.
+**Team members:** <Emily Lupercio and Johanna Alvarado>
 
 ## 1. Problem statement
 
-_Who has the problem, what decision or need it involves, why it matters, and what you expect to find._
+The FBI describes a hate crime to be a crime against a person, multiple people, or an organization based on their race, religion, sexual orientation, gender identity or due to a disability. It turns out, just about anyone in America is at risk of becoming a hate crime victim. 
 
+We want to reveal patterns within the data. What groups are targeted most? Does it change every year? We expect to find a change in frequencies over the years. To see a sudden increase in the number of hate crimes. Our goal is to try to explain these trends.   
+
+Finding a direct cause of hate crimes is not possible, but we can find correlations to explain sudden triggers and acknowledge them for preventative measures.  
 
 ## 2. Research question
 
-_A clear association between a response and at least one predictor variable._
-
+Does the most frequently targeted group change at the time of presidential elections when it comes to San Francisco based hate crimes? 
 
 ## 3. Data acquisition
 
-_In 1-2 sentences, describe the data you intend to collect and how you will get it._
+* The FBI Crime explorer data sets is a collection of crime reported by agencies. Official webpage provides download options per year for public access.  
 
+* The Police Department Investigated Hate Crimes data set (PDIHC) is a collection of hate crime reports from the San Francisco Police Department. Data is not restricted and ranges from year 2000 to 2026.
 
 ### a. Confirm viability
 
-_Scraping: summarize the "Before You Scrape" checklist. Downloading: citation, link to the documentation, and how the data were originally collected. Collecting it yourself: how you are collecting it and where you are storing it._
-
+* Agencies such as county police offices and university campuses report hate crime incidents to the the FBI Crime explorer data sets for public access.
+  * Documentation: https://www.fbi.gov/how-we-can-help-you/more-fbi-services-and-information/ucr 
+  
+* The San Francisco hate crimes data set is open for public download on the government's data web page.
+  * Documentation link: https://data.sf.gov/Public-Safety/Police-Department-Investigated-Hate-Crimes/huqr-9p9x/about_data
 
 ### b. Variables of interest
 
-_If you do not have the data yet, list the variables you plan to collect and the exact question text. Include 1) the variable name, 2) data type 3) description. Use bullet points._
+* FBI data:
+  * From Table 11 “total offences” per state, per year.  
+  * From table 1 “incidents” per bias type, per year. 
+  
+* PDIHC data: 
+  * Year and date of reported hate crime as categorical “occurence_month”.  
+  * Specific victim group as categorical “most_serious_bias”.
+  * The motivation behind crime “most_serious_bias_type”.
 
 
-## 4. Data example
+## 4. Data example  
 
-_Scraping: a URL and an annotated screenshot. Downloading: a link to your rendered `data_management.pdf` with `glimpse()`. Collecting: a screenshot of one example row._
-
+Link to data: https://github.com/jkalvarado/proj02/blob/main/data_management.pdf
 
 ## 5. EDA
 
-_The techniques and functions you plan to use to import, wrangle, visualize, and explore the data, and why each is needed._
+We are using alternatives to scraping, which is downloading the csv of hate crime incidents and the FBI's 2025 Hate Crime Statistics.
 
+Import: `read_csv()` for the incident CSV and `read_excel()` for the FBI tables, since they come as .xlsx files.
+
+Wrangle: The FBI tables are made to look nice, not to be used in R (titles, footnotes, stacked headers), so we'll use `clean_names()` to fix column names, `filter()` to drop the extra rows, and `pivot_longer()` to make the tables tidy so they're easy to graph. We'll use `mutate()` with 
+`as.Date()` to turn the incident months into real dates so we can look at trends.
+
+Explore: `glimpse()`, `summary()`, and `count()` to check data types, missing values, and categories. `group_by()` + `summarize()` to break things down by bias type, crime type, and location. `left_join()` to match each state's numbers with its population so bigger states don't look
+worse just because they have more people.
+
+Visualize: ggplot2: bar charts (`geom_col()`) to compare groups and line graphs (`geom_line()`) to show changes over time.
 
 ## 6. Modeling
 
-_The models you plan to use, your response and predictor variables, and why the models fit your research question._
+We're using the San Francisco PDIHC data for modeling since each row is one hate crime with a date and bias, which is what we need to answer our RQ. We'll make an election period variable (`election_period`) that marks incidents from 3 months before to 3 months after each presidential 
+election (2000, 2004, ... 2024) as "yes" and everything else as "no".
 
+Multiple linear regression: we'll count incidents per month for each bias type and use the monthly count as our response. Our predictors are `election_period`, bias type (`most_serious_bias_type`), and year. We'll add an interaction between `election_period` and bias type to see if some 
+groups go up more than others during elections, which tells us if the most targeted group changes. We include year so we don't confuse a long-term trend with an election effect.
+
+Simple linear regression: we'll count incidents per month for each bias type and use the monthly count as our response. Our predictor is `election_period`. Since it's categorical, the slope tells us how many more (or fewer) incidents per month a group gets during election periods compared to other months. We'll fit a separate model for each of the most targeted groups from our EDA and compare their slopes. If a different group has the biggest jump during election periods, that means the most targeted group changes around elections. We'll use `linear_reg()`, `fit()`, and `tidy()` for the models and `augment()` to check the residuals.
+
+Bootstrapping: we'll bootstrap a 95% confidence interval for each slope. If the interval doesn't include 0, that tells us the election period really does make a difference for that group and it's not just random.
+
+The FBI 2025 tables will be used for EDA and to compare San Francisco to the rest of California and the U.S.
 
 ## 7. Communicate
 
-_How you plan to present your results (website, poster, or short slide presentation)._
-
+Results will be displayed on poster.
 
 ## 8. LLM disclaimer
 
-_Whether and how you will use AI tools: the specific tool, its use, and your data protection methods. If you won't use any, say so._
+We expect to use ChatGPT and Claude for debugging original code, with the purpose of returning optimal model visualizations and results. Raw data will not be shared with any LLMs, along with any identifiable data. 
 
