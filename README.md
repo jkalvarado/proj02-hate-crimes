@@ -44,7 +44,7 @@ Does the most frequently targeted group change at the time of presidential elect
 
 ## 4. Data example  
 
-Link to data: file:///C:/Users/Emily/OneDrive/Math385/data_management.pdf
+Link to data: [rendered PDF](data_management.pdf)
 
 ## 5. EDA
 
