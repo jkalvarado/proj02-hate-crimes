@@ -42,7 +42,7 @@ Does the most frequently targeted group change at the time of presidential elect
   *The motivation behind crime “most_serious_bias_type” 
 
 
-## 4. Data example
+## 4. Data example  
 
 Link to data: file:///C:/Users/Emily/OneDrive/Math385/data_management.pdf
 
