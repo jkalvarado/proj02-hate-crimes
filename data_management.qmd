@@ -1,0 +1,39 @@
+---
+title: "Data Management"
+format: pdf
+author: Emily Lupercio and Johanna Alvarado
+
+---
+
+# load Packages
+```{r}
+#| message: false 
+library(tidyverse)
+library(readxl)
+```
+
+# Import FBI Data 
+```{r}
+#| message: false 
+fbi_t1 <- read_excel(here::here("data/Table_1_2025.xlsx"))
+
+fbi_t2 <- read_excel(here::here("data/Table_11_2025.xlsx"))
+```
+
+# Import SFPD Data 
+```{r}
+#| message: false 
+sfpd <- read_csv(here::here("data/SFPD.csv"))
+```
+
+
+# Glimpse Data 
+
+```{r}
+glimpse(fbi_t1)
+
+glimpse(fbi_t2)
+
+glimpse(sfpd)
+```
+
